@@ -19,7 +19,7 @@ router.post(
   placesControllers.createPlace
 );
 
-router.patch(
+router.put(
   "/:pid",
   [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
   placesControllers.updatePlace

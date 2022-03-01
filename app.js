@@ -1,7 +1,6 @@
 const express = require("express");
-// const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
-const coordinatesRoutes = require("./routes/coordinates-routes");
+const vehiclesRoutes = require("./routes/vehicle-routes");
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
@@ -9,8 +8,8 @@ const HttpError = require("./models/http-error");
 const app = express();
 
 app.use(express.json());
-app.use("/api/coords", coordinatesRoutes); // => /api/places...
-app.use("/api/places", placesRoutes); // => /api/places...
+app.use("/api/vehicles", vehiclesRoutes); 
+app.use("/api/places", placesRoutes);
 app.use("/api/users", usersRoutes);
 
 app.use((req, res, next) => {
@@ -28,8 +27,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    // "mongodb+srv://Admin:kMjzU6BuqDhjrMt@cluster0.elyd8.mongodb.net/places?retryWrites=true&w=majority"
-    "mongodb+srv://Admin:kMjzU6BuqDhjrMt@cluster0.elyd8.mongodb.net/Coordinates?retryWrites=true&w=majority"
+    "mongodb+srv://Admin:kMjzU6BuqDhjrMt@cluster0.elyd8.mongodb.net/Where's_My_Ride?retryWrites=true&w=majority"
   )
   .then(() => {
     app.listen(5000);
