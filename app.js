@@ -1,20 +1,21 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
-
+// const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
+const coordinatesRoutes = require("./routes/coordinates-routes");
 const placesRoutes = require("./routes/places-routes");
-const userRoutes = require("./routes/users-routes");
+const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
 
 const app = express();
 
 app.use(express.json());
-
+app.use("/api/coords", coordinatesRoutes); // => /api/places...
 app.use("/api/places", placesRoutes); // => /api/places...
-app.use("/api/users", userRoutes);
+app.use("/api/users", usersRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.", 404);
-  return next(error);
+  throw error;
 });
 
 app.use((error, req, res, next) => {
@@ -25,4 +26,14 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-app.listen(5000);
+mongoose
+  .connect(
+    // "mongodb+srv://Admin:kMjzU6BuqDhjrMt@cluster0.elyd8.mongodb.net/places?retryWrites=true&w=majority"
+    "mongodb+srv://Admin:kMjzU6BuqDhjrMt@cluster0.elyd8.mongodb.net/Coordinates?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
