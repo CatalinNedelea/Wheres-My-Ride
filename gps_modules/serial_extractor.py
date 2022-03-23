@@ -17,3 +17,5 @@ myserial = getserial()
 with open('serialNo.txt', 'w') as f:
     for line in myserial:
         f.write(line)
+
+r = requests.get('http://localhost:6969/api/`${myserial}`')
