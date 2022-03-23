@@ -1,0 +1,32 @@
+{
+    "name":"E3",
+    "numberPlate":"TM 12 ABC",
+    "description": "Gets me to uni!",
+    "schedule":{
+        "station":{
+            "workingDays":["12:22-12:25 Apicultorilor","12:25-12:29 Martirilor"],
+            "saturday":["13:22-13:25 Apicultorilor","13:25-13:29 Martirilor"],
+            "sunday":["14:22-14:25 Apicultorilor","14:25-14:29 Martirilor"]
+        }},
+    "currentLocation": {
+    "latitude": "45° 20.6028' N",
+    "longitude": "21° 50.12084' E",
+    "speed": "67",
+    "altitude": "205.0",
+    "datetimev": "21/11/2022 (14:19:25)"},
+    "serialNo": "000000000000000b"
+}
+
+{
+    "name":"E2",
+    "type":"Bus",
+    "numberPlate":"TM 13 ABC",
+    "description": "Gets me to uni!",
+    "currentLocation": {
+    "latitude": "45° 20.6028' N",
+    "longitude": "21° 50.12084' E",
+    "speed": "67",
+    "altitude": "205.0",
+    "datetimev": "21/11/2022 (14:19:25)"},
+    "serialNo": "000000000000000e"
+}

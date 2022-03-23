@@ -1,26 +1,10 @@
-const { v4: uuidV4 } = require("uuid");
 const { validationResult } = require("express-validator");
-
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
 
-let DUMMY_PLACES = [
-  {
-    id: "p1",
-    title: "Empire State Building",
-    description: "One of the most famous sky scrapers in the world!",
-    location: {
-      lat: 40.7484474,
-      lng: -73.9871516,
-    },
-    address: "20 W 34th St, New York, NY 10001",
-    creator: "u1",
-  },
-];
-
 const getPlaceById = async (req, res, next) => {
-  const placeId = req.params.pid; // { pid: 'p1' }
+  const placeId = req.params.pid;
   let place;
   try {
     place = await Place.findById(placeId);
@@ -40,11 +24,8 @@ const getPlaceById = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ place }); // => { place } => { place: place }
+  res.json({ place });
 };
-
-// function getPlaceById() { ... }
-// const getPlaceById = function() { ... }
 
 const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.uid;
@@ -79,7 +60,6 @@ const createPlace = async (req, res, next) => {
     return next(error);
   }
 
-  // const title = req.body.title;
   const createdPlace = new Place({
     title,
     description,
@@ -106,7 +86,7 @@ const createPlace = async (req, res, next) => {
 const updatePlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError('Invalid inputs passed, please check your data.', 422);
+    throw new HttpError("Invalid inputs passed, please check your data.", 422);
   }
 
   const { title, description } = req.body;
@@ -117,7 +97,7 @@ const updatePlace = async (req, res, next) => {
     place = await Place.findById(placeId);
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong, could not update place.',
+      "Something went wrong, could not update place.",
       500
     );
     return next(error);
@@ -130,7 +110,7 @@ const updatePlace = async (req, res, next) => {
     await place.save();
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong, could not update place.',
+      "Something went wrong, could not update place.",
       500
     );
     return next(error);
@@ -147,7 +127,7 @@ const deletePlace = async (req, res, next) => {
     place = await Place.findById(placeId);
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong, could not delete place.',
+      "Something went wrong, could not delete place.",
       500
     );
     return next(error);
@@ -157,13 +137,13 @@ const deletePlace = async (req, res, next) => {
     await place.remove();
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong, could not delete place.',
+      "Something went wrong, could not delete place.",
       500
     );
     return next(error);
   }
 
-  res.status(200).json({ message: 'Deleted place.' });
+  res.status(200).json({ message: "Deleted place." });
 };
 
 exports.getPlaceById = getPlaceById;

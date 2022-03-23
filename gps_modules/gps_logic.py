@@ -8,7 +8,6 @@ import requests
 from micropyGPS import MicropyGPS 
 import firebase_admin #GOOGL
 import Adafruit_SSD1306 
-
 import Adafruit_GPIO.SPI as SPI
 from PIL import Image
 from PIL import ImageDraw
@@ -104,8 +103,19 @@ while True:
 		logfile.write(logstring)
 		logfile.close()
 		#end logging related
+  
+		r = requests.put(
+    'http://localhost:5000/api/vehicles/621688f6a8f22bb12e59d5dd', json={
+        "currentLocation": {
+            "latitude": latitude,
+            "longitude": longitude,
+            "speed": str(int(float(speed2))),
+            "altitude": altitude,
+            "datetimev": datetimev}
+    })
 
 
 	except:
 		print("Error!")
+
 
