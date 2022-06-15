@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "../../axios/axios";
 import {
   GoogleMap,
   useLoadScript,
@@ -33,8 +34,8 @@ const options = {
   zoomControl: true,
 };
 const center = {
-  lat: 43.6532,
-  lng: -79.3832,
+  lat: 45.7573647,
+  lng: 21.2297963,
 };
 
 export default function Home() {
@@ -44,6 +45,20 @@ export default function Home() {
   });
   const [markers, setMarkers] = React.useState([]);
   const [selected, setSelected] = React.useState(null);
+
+  const [vehicles, setVehicles] = useState([]);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("/vehicles")
+      .then((response) => {
+        setVehicles(response.data.vehicles);
+      })
+      .catch((error) => {
+        setError(true);
+      });
+  }, []);
 
   const onMapClick = React.useCallback((e) => {
     setMarkers((current) => [
@@ -83,10 +98,13 @@ export default function Home() {
         onClick={onMapClick}
         onLoad={onMapLoad}
       >
-        {markers.map((marker) => (
+        {vehicles.map((marker) => (
           <Marker
-            key={`${marker.lat}-${marker.lng}`}
-            position={{ lat: marker.lat, lng: marker.lng }}
+            key={`${marker.currentLocation.latitude}-${marker.currentLocation.longitude}`}
+            position={{
+              lat: marker.currentLocation.latitude,
+              lng: marker.currentLocation.longitude,
+            }}
             // onClick={() => {
             //   setSelected(marker);
             // }}
