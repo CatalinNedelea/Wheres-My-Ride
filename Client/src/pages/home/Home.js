@@ -7,14 +7,10 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
 import mapStyles from "./mapStyles";
-import compass from "../../environment/assets/compass.svg";
 import { parseLatitude, parseLongitude } from "../../helpers/DDMtoDD";
-import { Frame, Center, Utility, MapFrame } from "./Home.style";
+import { Frame, Utility, MapFrame, Center, Row, Column, Input } from "./Home.style";
+import useEffectOnce from "../../hooks/useEffectOnce";
 
 const libraries = ["places"];
 const options = {
@@ -22,14 +18,19 @@ const options = {
   disableDefaultUI: true,
   zoomControl: true,
 };
+
 const center = {
   lat: 45.7573647,
   lng: 21.2297963,
 };
 
 export default function Home() {
+  // const { isLoaded, loadError } = useLoadScript({
+  //   googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  //   libraries,
+  // });
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: `AIzaSyCf_XSFv4rJgBX9nXRczGe0WsRxD7dmxpw`,
     libraries,
   });
   const [markers, setMarkers] = React.useState([]);
@@ -101,6 +102,26 @@ export default function Home() {
     }
   }, [vehicles]);
 
+  function getUserLocation(pos) {
+    const crd = pos.coords;
+    setUserLocation({
+      lat: crd.latitude,
+      lng: crd.longitude,
+      time: new Date(),
+    });
+  }
+
+  function getUserLocationError(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  useEffectOnce(() => {
+    navigator.geolocation.getCurrentPosition(
+      getUserLocation,
+      getUserLocationError
+    );
+  });
+
   const mapRef = React.useRef();
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
@@ -114,52 +135,45 @@ export default function Home() {
   if (loadError) return "Error";
   if (!isLoaded) return "Loading...";
 
-  function success(pos) {
-    const crd = pos.coords;
-    setUserLocation({
-      lat: crd.latitude,
-      lng: crd.longitude,
-      time: new Date(),
-    });
-  }
-
-  function error2(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-  }
-
-  navigator.geolocation.getCurrentPosition(success, error2);
+  // const center = cloneDeep(userLocation);
 
   return (
     <Frame>
-      <Utility>
-        <Locate panTo={panTo} />
-        <div>
-          <Autocomplete>
-            <input type="text" placeholder="Origin" ref={originRef} />
-          </Autocomplete>
-        </div>
-        <div>
-          <Autocomplete>
-            <input type="text" placeholder="Destination" ref={destinationRef} />
-          </Autocomplete>
-        </div>
+      <Center>
+        <Utility>
+          <Column>
+            <Input>
+              <Autocomplete>
+                <input type="text" placeholder="Origin" ref={originRef} />
+              </Autocomplete>
+            </Input>
+            <Input>
+              <Autocomplete>
+                <input
+                  type="text"
+                  placeholder="Destination"
+                  ref={destinationRef}
+                />
+              </Autocomplete>
+            </Input>
+            <div>
+              <button type="submit" onClick={calculateRoute}>
+                Calculate Route
+              </button>
+            </div>
+          </Column>
 
-        <div>
-          <button type="submit" onClick={calculateRoute}>
-            Calculate Route
-          </button>
-        </div>
-
-        <div>
-          <p>Distance: {distance} </p>
-          <p>Duration: {duration} </p>
-        </div>
-      </Utility>
+          <Row>
+            <p>Distance: {distance} </p>
+            <p>Duration: {duration} </p>
+          </Row>
+        </Utility>
+      </Center>
 
       <MapFrame>
         <GoogleMap
           id="map"
-          mapContainerStyle={{ height: "100vh", width: "100vw" }}
+          mapContainerStyle={{ height: "95vh", width: "95vw" }}
           zoom={8}
           center={center}
           options={options}
@@ -181,7 +195,6 @@ export default function Home() {
               position={{ lat: marker.lat, lng: marker.lng }}
             />
           ))}
-
           <Marker position={center} />
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
@@ -191,75 +204,3 @@ export default function Home() {
     </Frame>
   );
 }
-
-//Returns your current location
-function Locate({ panTo }) {
-  return (
-    <button
-      className="locate"
-      onClick={() => {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            panTo({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-          () => null
-        );
-      }}
-    >
-      <img src={compass} alt="compass" />
-    </button>
-  );
-}
-
-// function Search({ panTo }) {
-//   const {
-//     ready,
-//     value,
-//     suggestions: { status, data },
-//     setValue,
-//     clearSuggestions,
-//   } = usePlacesAutocomplete({
-//     requestOptions: {
-//       location: { lat: () => 43.6532, lng: () => -79.3832 },
-//       radius: 100 * 1000,
-//     },
-//   });
-
-//   const handleInput = (e) => {
-//     setValue(e.target.value);
-//   };
-
-//   const handleSelect = async (address) => {
-//     setValue(address, false);
-//     clearSuggestions();
-
-//     try {
-//       const results = await getGeocode({ address });
-//       const { lat, lng } = await getLatLng(results[0]);
-//       panTo({ lat, lng });
-//     } catch (error) {
-//       console.log("😱 Error: ", error);
-//     }
-//   };
-
-//   return <div>Tomato</div>;
-//   /* <Combobox onSelect={handleSelect}>
-//         <ComboboxInput
-//           value={value}
-//           onChange={handleInput}
-//           disabled={!ready}
-//           placeholder="Search your location"
-//         />
-//         <ComboboxPopover>
-//           <ComboboxList>
-//             {status === "OK" &&
-//               data.map(({ id, description }) => (
-//                 <ComboboxOption key={id} value={description} />
-//               ))}
-//           </ComboboxList>
-//         </ComboboxPopover>
-//       </Combobox> */
-// }
