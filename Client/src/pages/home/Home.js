@@ -6,10 +6,19 @@ import {
   Marker,
   Autocomplete,
   DirectionsRenderer,
+  DirectionsService,
 } from "@react-google-maps/api";
 import mapStyles from "./mapStyles";
 import { parseLatitude, parseLongitude } from "../../helpers/DDMtoDD";
-import { Frame, Utility, MapFrame, Center, Row, Column, Input } from "./Home.style";
+import {
+  Frame,
+  Utility,
+  MapFrame,
+  Center,
+  Row,
+  Column,
+  Input,
+} from "./Home.style";
 import useEffectOnce from "../../hooks/useEffectOnce";
 
 const libraries = ["places"];
@@ -41,6 +50,9 @@ export default function Home() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const google = window.google;
+  const [origin, setOrigin] = useState({});
+  const [destination, setDestination] = useState({});
 
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef();
@@ -48,17 +60,21 @@ export default function Home() {
   const destinationRef = useRef();
 
   async function calculateRoute() {
-    if (originRef.current.value === "" || destinationRef.current.value === "") {
+    if (destinationRef.current.value === "") {
       return;
     }
-    // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: originRef.current.value,
-      destination: destinationRef.current.value,
-      // eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
+    const directionsRenderer = new window.google.maps.DirectionsRenderer();
+    const results = await directionsService
+      .route({
+        origin: originRef.current.value || {
+          lat: userLocation.lat,
+          lng: userLocation.lng,
+        },
+        destination: destinationRef.current.value,
+        travelMode: google.maps.TravelMode.TRANSIT,
+      })
+   console.log(results.routes[0].legs[0].steps)
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
@@ -123,9 +139,18 @@ export default function Home() {
   });
 
   const mapRef = React.useRef();
-  const onMapLoad = React.useCallback((map) => {
-    mapRef.current = map;
-  }, []);
+  const onMapLoad = React.useCallback(
+    (map) => {
+      mapRef.current = map;
+      const directionsRenderer = new window.google.maps.DirectionsRenderer();
+      const directionsService = new window.google.maps.DirectionsService();
+      directionsRenderer.setMap(map);
+
+      userLocation &&
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+    },
+    [userLocation]
+  );
 
   const panTo = React.useCallback(({ lat, lng }) => {
     mapRef.current.panTo({ lat, lng });
@@ -135,7 +160,22 @@ export default function Home() {
   if (loadError) return "Error";
   if (!isLoaded) return "Loading...";
 
-  // const center = cloneDeep(userLocation);
+  function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+    if (destinationRef.current.value === "") {
+      return;
+    }
+
+    directionsService
+      .route({
+        origin: { lat: userLocation.lat, lng: userLocation.lng },
+        destination: destinationRef.current.value,
+        travelMode: window.google.maps.TravelMode.TRANSIT,
+      })
+      .then((response) => {
+        directionsRenderer.setDirections(response);
+      })
+      .catch((e) => window.alert("Directions request failed due to "));
+  }
 
   return (
     <Frame>
@@ -178,6 +218,7 @@ export default function Home() {
           center={center}
           options={options}
           onLoad={onMapLoad}
+          ref={mapRef}
         >
           {userLocation && (
             <Marker
