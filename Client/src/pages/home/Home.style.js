@@ -1,19 +1,22 @@
 import styled from "styled-components";
 
 export const Frame = styled.div`
-  position: relative;
+  /* position: relative;
   justify-content: space-between;
   flex-direction: row;
-  display: flex;
+  display: flex; */
 `;
 
 export const Center = styled.div`
   display: flex;
-  width: 100%;
   justify-content: center;
+  top: 20%;
+  left: 50%;
   position: absolute;
-  top: 3%;
   text-align: center;
+  @media (min-width: 730px) {
+    left: 20%;
+  }
 `;
 
 export const Row = styled.div`
@@ -28,26 +31,42 @@ export const Column = styled.div`
   justify-content: center;
 `;
 
-export const Input = styled.div`
-  min-height: 0.5rem;
-  min-width: 2rem;
+export const Input = styled.input`
+  background-color: #f8f8ff;
+  height: 10%;
+  width: 75%;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 1rem;
 `;
 
 export const Utility = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 10%;
+  top: 5%;
   text-align: center;
   font-size: 18px;
   border-radius: 1rem;
-  background-color: teal;
-  min-width: 2rem;
-  min-height: 2rem;
+  background-color: #2f4f4f;
+  width: auto;
+  height: auto;
   z-index: 1;
 `;
 
 export const MapFrame = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+export const ButtonContainer = styled.button`
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  background-color: #e6e6fa;
+`;
+
+export const Paragraph = styled.p`
+  margin-right: 2rem;
+  margin-left: 2rem;
 `;

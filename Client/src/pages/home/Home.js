@@ -18,8 +18,13 @@ import {
   Row,
   Column,
   Input,
+  ButtonContainer,
+  Paragraph,
 } from "./Home.style";
 import useEffectOnce from "../../hooks/useEffectOnce";
+import busP from "../../environment/assets/bus.png";
+import tramP from "../../environment/assets/tram.png";
+import trolleyP from "../../environment/assets/trolley.png";
 
 const libraries = ["places"];
 const options = {
@@ -43,7 +48,6 @@ export default function Home() {
     libraries,
   });
   const [markers, setMarkers] = React.useState([]);
-  const [selected, setSelected] = React.useState(null);
   const [userLocation, setUserLocation] = React.useState();
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState(false);
@@ -51,12 +55,9 @@ export default function Home() {
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
   const google = window.google;
-  const [origin, setOrigin] = useState({});
-  const [destination, setDestination] = useState({});
 
-  /** @type React.MutableRefObject<HTMLInputElement> */
+  //Reference to user input
   const originRef = useRef();
-  /** @type React.MutableRefObject<HTMLInputElement> */
   const destinationRef = useRef();
 
   async function calculateRoute() {
@@ -65,16 +66,18 @@ export default function Home() {
     }
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new window.google.maps.DirectionsRenderer();
-    const results = await directionsService
-      .route({
-        origin: originRef.current.value || {
-          lat: userLocation.lat,
-          lng: userLocation.lng,
-        },
-        destination: destinationRef.current.value,
-        travelMode: google.maps.TravelMode.TRANSIT,
-      })
-   console.log(results.routes[0].legs[0].steps)
+    const results = await directionsService.route({
+      origin: originRef.current.value || {
+        lat: userLocation.lat,
+        lng: userLocation.lng,
+      },
+      destination: destinationRef.current.value,
+      travelMode: google.maps.TravelMode.TRANSIT,
+    });
+    // console.log(results.routes[0].legs[0].steps);
+    console.log(results);
+    // console.log(results.routes[0].legs[0].steps[1].transit.line.short_name);
+    // console.log(results.routes[0].legs[0].steps[1].transit.line);
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
@@ -111,6 +114,7 @@ export default function Home() {
               lng: parseLongitude(vehicle.currentLocation.longitude),
               time: new Date(),
               id: vehicle._id,
+              type: vehicle.type,
             },
           ]);
         }
@@ -182,30 +186,41 @@ export default function Home() {
       <Center>
         <Utility>
           <Column>
-            <Input>
-              <Autocomplete>
-                <input type="text" placeholder="Origin" ref={originRef} />
-              </Autocomplete>
-            </Input>
-            <Input>
-              <Autocomplete>
-                <input
-                  type="text"
-                  placeholder="Destination"
-                  ref={destinationRef}
-                />
-              </Autocomplete>
-            </Input>
+            <Autocomplete>
+              <Input type="text" placeholder="Origin" ref={originRef} />
+            </Autocomplete>
+            <Autocomplete>
+              <Input
+                type="text"
+                placeholder="Destination"
+                ref={destinationRef}
+              />
+            </Autocomplete>
             <div>
-              <button type="submit" onClick={calculateRoute}>
+              <ButtonContainer type="submit" onClick={calculateRoute}>
                 Calculate Route
-              </button>
+              </ButtonContainer>
+              <ButtonContainer
+                className="locate"
+                onClick={() => {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      panTo({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                      });
+                    },
+                    () => null
+                  );
+                }}
+              >
+                Show Me{" "}
+              </ButtonContainer>
             </div>
           </Column>
-
           <Row>
-            <p>Distance: {distance} </p>
-            <p>Duration: {duration} </p>
+            <Paragraph>Distance: {distance} </Paragraph>
+            <Paragraph>Duration: {duration} </Paragraph>
           </Row>
         </Utility>
       </Center>
@@ -230,10 +245,32 @@ export default function Home() {
             />
           )}
 
+          {/* <VehicleImage
+              src={
+                vehicle.type === "Bus"
+                  ? busP
+                  : vehicle.type === "Tram"
+                  ? tramP
+                  : trolleyP
+              }
+              alt="VehicleType"
+            /> */}
+
           {markers.map((marker) => (
             <Marker
               key={marker.id}
               position={{ lat: marker.lat, lng: marker.lng }}
+              icon={{
+                url:
+                  marker.type === "Bus"
+                    ? busP
+                    : marker.type === "Tram"
+                    ? tramP
+                    : trolleyP,
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
             />
           ))}
           <Marker position={center} />
@@ -243,5 +280,24 @@ export default function Home() {
         </GoogleMap>
       </MapFrame>
     </Frame>
+  );
+}
+
+function Locate({ panTo }) {
+  return (
+    <button
+      className="locate"
+      onClick={() => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            panTo({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          () => null
+        );
+      }}
+    ></button>
   );
 }
