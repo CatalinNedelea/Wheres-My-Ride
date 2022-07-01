@@ -6,7 +6,7 @@ const getSchedules = async (req, res, next) => {
   let schedules;
   try {
     schedules = await Schedule.find();
-    console.log(schedules);
+    // console.log(schedules);
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find any schedule entries.",
@@ -27,7 +27,7 @@ const getScheduleById = async (req, res, next) => {
   let schedule;
   try {
     schedule = await Schedule.findById(scheduleId);
-    console.log(schedule, scheduleId);
+    // console.log(schedule, scheduleId);
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find a schedule",

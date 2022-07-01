@@ -54,6 +54,7 @@ export default function Home() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [data, setData] = useState([]);
   const google = window.google;
 
   //Reference to user input
@@ -81,7 +82,40 @@ export default function Home() {
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
+    setData(results.routes[0].legs[0].steps);
   }
+  //Functia de directions de la vehicle la statie
+
+  // useEffect(() => {
+  //   async function Alakazam() {
+  //     if (data.length) {
+  //       let found = false;
+  //       data.map((d) => {
+  //         if (d.transit && !found) {
+  //           axios
+  //             .post("/vehicles/vehicleByName/" + d.transit.line.short_name)
+  //             .then((response) => {
+  //               response.data.vehicles.map(async (vehicle) => {
+  //                 const directionsService = new google.maps.DirectionsService();
+  //                 console.log(d.transit.departure_stop.name);
+  //                 const results = await directionsService.route({
+  //                   origin: {
+  //                     lat: 45.783244,
+  //                     lng: 21.219244,
+  //                   },
+  //                   destination: d.transit.departure_stop.name,
+  //                   travelMode: google.maps.TravelMode.TRANSIT,
+  //                 });
+  //                 console.log(results);
+  //               });
+  //             });
+  //           found = true;
+  //         }
+  //       });
+  //     }
+  //   }
+  //   Alakazam();
+  // }, [data]);
 
   function clearRoute() {
     setDirectionsResponse(null);

@@ -22,9 +22,9 @@ export const VehicleDetails = () => {
       setLoadingSchedule(true);
     }
   }, [vehicle]);
-  console.log(schedule);
+  // console.log(schedule);
 
-  console.log("Vehicle stuff", vehicle);
+  // console.log("Vehicle stuff", vehicle);
   useEffect(() => {
     axios.post("/vehicles/" + id).then((response) => {
       setVehicle(response.data.vehicle);
