@@ -1,0 +1,571 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "Where's my Ride?",
+    "contact": {
+      "email": "catalin.nedelea98@e-uv.ro"
+    }
+  },
+  "tags": [
+    {
+      "name": "vehicles",
+      "description": "Everything about your Vehicles"
+    },
+    {
+      "name": "schedules",
+      "description": "Operations about schedules"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/schedules/{sid}": {
+      "get": {
+        "tags": [
+          "schedules"
+        ],
+        "summary": "Get a schedule",
+        "description": "",
+        "operationId": "getScheduleById",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Schedule"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/schedules": {
+      "get": {
+        "tags": [
+          "schedules"
+        ],
+        "summary": "Finds Schedules",
+        "operationId": "getSchedules",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Schedule"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "schedules"
+        ],
+        "summary": "Create a new schedule",
+        "operationId": "createSchedule",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateSchedule"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Schedule"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/vehicles/{vid}": {
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get vehicle by id",
+        "description": "",
+        "operationId": "getVehicle",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Update vehicle",
+        "description": "",
+        "operationId": "updateVehicle",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateSchedule"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Delete a vehicle by id",
+        "description": "",
+        "operationId": "deleteVehicle",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/vehicles/{serialNo}": {
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get vehicle by serial number",
+        "description": "",
+        "operationId": "getVehicleBySerialNo",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serialNo",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Vehicle"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/vehicles/vehicleByName/{name}": {
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Get vehicles by name",
+        "description": "",
+        "operationId": "getVehiclesByName",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vehicle"
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Finds vehicles",
+        "operationId": "getVehicles",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vehicle"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "vehicles"
+        ],
+        "summary": "Create a new vehicle",
+        "operationId": "createVehicle",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateVehicle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vehicle"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Schedule": {
+      "type": "object",
+      "required": [
+        "_id",
+        "stations"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "stations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Station"
+          }
+        }
+      },
+      "xml": {
+        "name": "Schedule"
+      }
+    },
+    "Vehicle": {
+      "type": "object",
+      "required": [
+        "_id",
+        "type",
+        "name",
+        "numberPlate",
+        "currentLocation",
+        "serialNo"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "numberPlate": {
+          "type": "string"
+        },
+        "currentLocation": {
+          "$ref": "#/definitions/CurrentLocation"
+        },
+        "serialNo": {
+          "type": "string"
+        },
+        "scheduleId": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Vehicle"
+      }
+    },
+    "CreateVehicle": {
+      "type": "object",
+      "required": [
+        "type",
+        "name",
+        "numberPlate",
+        "currentLocation",
+        "serialNo"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "numberPlate": {
+          "type": "string"
+        },
+        "currentLocation": {
+          "$ref": "#/definitions/CurrentLocation"
+        },
+        "serialNo": {
+          "type": "string"
+        },
+        "scheduleId": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "CreateVehicle"
+      }
+    },
+    "CurrentLocation": {
+      "type": "object",
+      "required": [
+        "latitude",
+        "longitude",
+        "speed",
+        "altitude",
+        "datetimev"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "string"
+        },
+        "longitude": {
+          "type": "string"
+        },
+        "speed": {
+          "type": "string"
+        },
+        "altitude": {
+          "type": "string"
+        },
+        "datetimev": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "CurrentLocation"
+      }
+    },
+    "CreateSchedule": {
+      "type": "object",
+      "required": [
+        "stations"
+      ],
+      "properties": {
+        "stations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Station"
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateSchedule"
+      }
+    },
+    "Station": {
+      "type": "object",
+      "required": [
+        "_id",
+        "name",
+        "schedule"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "object",
+          "properties": {
+            "workingDays": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "saturday": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sunday": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "Station"
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -31,7 +31,7 @@ export const VehicleSection = (props) => {
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${parseLatitude(
         vehicle.currentLocation.latitude
       )},${parseLongitude(vehicle.currentLocation.longitude)}&key=
-        AIzaSyCf_XSFv4rJgBX9nXRczGe0WsRxD7dmxpw`
+      REACT_APP_GOOGLE_MAPS_API_KEY`
     );
 
     const data = response.data;

@@ -39,14 +39,11 @@ const center = {
 };
 
 export default function Home() {
-  // const { isLoaded, loadError } = useLoadScript({
-  //   googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  //   libraries,
-  // });
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: `AIzaSyCf_XSFv4rJgBX9nXRczGe0WsRxD7dmxpw`,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+ 
   const [markers, setMarkers] = React.useState([]);
   const [userLocation, setUserLocation] = React.useState();
   const [vehicles, setVehicles] = useState([]);
