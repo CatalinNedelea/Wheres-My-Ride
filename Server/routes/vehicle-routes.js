@@ -9,6 +9,9 @@ router.post("/:vid", vehiclesControllers.getVehicleById);
 
 router.get("/:serialNo", vehiclesControllers.getVehiclesBySerialNo);
 
+router.post("/vehicleByName/:name", vehiclesControllers.getVehiclesByName);
+
+
 router.get("/", vehiclesControllers.getVehicles);
 
 router.post(

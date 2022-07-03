@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const vehiclesRoutes = require("./routes/vehicle-routes");
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
+const scheduleRoutes = require("./routes/schedule-routes");
 const HttpError = require("./models/http-error");
 const cors = require("cors");
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/vehicles", vehiclesRoutes);
 app.use("/api/places", placesRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/schedule", scheduleRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.", 404);

@@ -27,8 +27,31 @@ const getVehiclesBySerialNo = async (req, res, next) => {
   res.json({ vehicles });
 };
 
-const getVehicles = async (req, res, next) => {
+const getVehiclesByName = async (req, res, next) => {
+  const name = req.params.name;
+  console.log(name);
+  let vehicles;
+  try {
+    vehicles = await Vehicle.find({ name: { $eq: name } });
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not find any vehicle entries.",
+      500
+    );
+    return next(error);
+  }
+  if (!vehicles.length) {
+    const error = new HttpError(
+      "Could not find a vehicle for the provided Serial Number.",
+      404
+    );
+    return next(error);
+  }
 
+  res.json({ vehicles });
+};
+
+const getVehicles = async (req, res, next) => {
   let vehicles;
   try {
     vehicles = await Vehicle.find();
@@ -40,10 +63,7 @@ const getVehicles = async (req, res, next) => {
     return next(error);
   }
   if (!vehicles.length) {
-    const error = new HttpError(
-      "Could not find vehicles.",
-      404
-    );
+    const error = new HttpError("Could not find vehicles.", 404);
     return next(error);
   }
 
@@ -170,3 +190,4 @@ exports.getVehicleById = getVehicleById;
 exports.createVehicle = createVehicle;
 exports.updateVehicle = updateVehicle;
 exports.deleteVehicle = deleteVehicle;
+exports.getVehiclesByName = getVehiclesByName;
